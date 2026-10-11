@@ -36,11 +36,27 @@ let enPartie = false;       // true pendant une partie
 let minuteur = null;        // délai éventuel avant une action différée
 let refuse = false;         // (invité) true si l'hôte nous a refusés
 
+// Le nombre de joueurs actuel convient-il à ce jeu ?
+function nombreValide(jeu, nombre) {
+  if (jeu.nombresAutorises) {
+    return jeu.nombresAutorises.includes(nombre);
+  }
+  return nombre >= jeu.joueursMin && nombre <= jeu.joueursMax;
+}
+
+// Texte décrivant les nombres de joueurs possibles : « 2 à 4 » ou « 2 ou 4 »
+function texteNombre(jeu) {
+  if (jeu.nombresAutorises) {
+    return jeu.nombresAutorises.join(' ou ');
+  }
+  return `${jeu.joueursMin} à ${jeu.joueursMax}`;
+}
+
 // Remplit le menu des jeux
 for (const cle in JEUX) {
   const option = document.createElement('option');
   option.value = cle;
-  option.textContent = `${JEUX[cle].nom} (${JEUX[cle].joueursMin} à ${JEUX[cle].joueursMax} joueurs)`;
+  option.textContent = `${JEUX[cle].nom} (${texteNombre(JEUX[cle])} joueurs)`;
   choixJeu.appendChild(option);
 }
 
@@ -143,7 +159,7 @@ function traiterMessageDeLHote(message) {
     afficherSalle();
   }
 
-  // Nouvel état de la partie
+  // Nouvel état de la partie (déjà adapté à ce que je peux voir)
   if (message.type === 'etat') {
     cleJeu = message.cleJeu;
     etat = message.etat;
@@ -213,9 +229,14 @@ function diffuserSalle(info) {
   afficherSalle();
 }
 
-// Envoie l'état de la partie à tous et l'affiche chez l'hôte
+// Envoie l'état de la partie à chaque joueur, adapté à ce qu'il a le droit de voir
 function diffuserEtat() {
-  envoyerATous({ type: 'etat', cleJeu, etat });
+  const jeu = JEUX[cleJeu];
+  joueursSalle.forEach((joueur) => {
+    if (joueur.id === 'hote') return; // l'hôte affiche directement (voir afficher)
+    const vue = jeu.vuePour ? jeu.vuePour(etat, joueur.id) : etat;
+    envoyerAUn(joueur.id, { type: 'etat', cleJeu, etat: vue });
+  });
   afficher();
 }
 
@@ -250,11 +271,11 @@ function afficherSalle() {
     attenteHote.classList.add('cache');
     choixJeu.value = cleJeu;
 
-    const assezDeJoueurs = joueursSalle.length >= jeuChoisi.joueursMin;
-    boutonLancer.disabled = !assezDeJoueurs;
-    infoMinimum.textContent = assezDeJoueurs
+    const nombreOk = nombreValide(jeuChoisi, joueursSalle.length);
+    boutonLancer.disabled = !nombreOk;
+    infoMinimum.textContent = nombreOk
       ? ''
-      : `Il faut au moins ${jeuChoisi.joueursMin} joueurs pour lancer ce jeu.`;
+      : `Ce jeu se joue à ${texteNombre(jeuChoisi)} joueurs (vous êtes ${joueursSalle.length}).`;
   } else {
     commandesHote.classList.add('cache');
     attenteHote.classList.remove('cache');
@@ -276,7 +297,7 @@ choixJeu.addEventListener('change', () => {
 // =====================================================
 function lancerPartie() {
   const jeu = JEUX[cleJeu];
-  if (joueursSalle.length < jeu.joueursMin) return;
+  if (!nombreValide(jeu, joueursSalle.length)) return;
 
   clearTimeout(minuteur);
   enPartie = true;
@@ -335,15 +356,20 @@ function envoyerAction(action) {
 //  AFFICHAGE DE LA PARTIE : on délègue au fichier du jeu
 // =====================================================
 function afficher() {
+  const jeu = JEUX[cleJeu];
   afficherEcran('jeu');
 
   // Les boutons de fin de partie sont réservés à l'hôte
   boutonRejouer.classList.toggle('cache', role !== 'hote');
   boutonSalle.classList.toggle('cache', role !== 'hote');
 
+  // L'hôte garde l'état complet : il affiche sa propre vue.
+  // Les invités ont déjà reçu leur vue, ils l'affichent telle quelle.
+  const vue = (role === 'hote' && jeu.vuePour) ? jeu.vuePour(etat, monIdJoueur) : etat;
+
   AFFICHAGES[cleJeu].afficher({
     conteneur: zoneJeu,
-    etat: etat,
+    etat: vue,
     monId: monIdJoueur,
     envoyerAction: envoyerAction,
   });

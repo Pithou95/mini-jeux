@@ -312,3 +312,187 @@ h1 {
   color: #1e1b4b;
   font-weight: bold;
 }
+
+/* ----- Jeu Code Name ----- */
+.statutCode {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.roleCode {
+  margin: 4px 0;
+  opacity: 0.9;
+}
+
+.indiceCode {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.alerteCode {
+  min-height: 1.2em;
+  color: #fde68a;
+  font-weight: bold;
+}
+
+/* Choix des places */
+.zonePlaces {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.colonnePlaces {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  min-width: 220px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.colonnePlaces.equipe-rouge { border-color: #ef4444; }
+.colonnePlaces.equipe-bleu  { border-color: #3b82f6; }
+.colonnePlaces h3 { margin: 0 0 4px; }
+
+button.place,
+.boutonCommencer,
+.boutonIndice {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+button.place.moi { background: #86efac; }
+
+button.place:disabled,
+.boutonCommencer:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Panneau d'informations (scores, vies, joker) */
+.panneauCode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.badgeCode {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid transparent;
+  font-weight: bold;
+}
+
+.badgeCode.equipe-rouge { background: rgba(239, 68, 68, 0.45); }
+.badgeCode.equipe-bleu  { background: rgba(59, 130, 246, 0.45); }
+.badgeCode.actif        { border-color: #ffffff; }
+
+.viesCode {
+  font-size: 1.6rem;
+  letter-spacing: 4px;
+}
+
+/* Formulaire de l'espion */
+.formulaireIndice input {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  text-align: center;
+}
+
+.formulaireIndice input[type="number"] {
+  width: 70px;
+}
+
+/* Plateau */
+.plateauCode {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.carteCode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 62px;
+  padding: 4px;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background: #f5efe0;
+  color: #1f2937;
+  font-weight: bold;
+  font-size: clamp(0.55rem, 2.4vw, 0.8rem);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  user-select: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s;
+}
+
+.carteCode.cliquable { cursor: pointer; }
+.carteCode.cliquable:hover { transform: scale(1.06); }
+
+/* Vue des espions (et fin de partie) : couleur secrète */
+.carteCode.secrete.couleur-rouge   { background: #fecaca; border-color: #ef4444; }
+.carteCode.secrete.couleur-bleu    { background: #bfdbfe; border-color: #3b82f6; }
+.carteCode.secrete.couleur-grise   { background: #d1d5db; border-color: #6b7280; }
+.carteCode.secrete.couleur-blanche { background: #ffffff; border-color: #e5e7eb; }
+.carteCode.secrete.couleur-noire   { background: #9ca3af; border-color: #000000; }
+
+/* Cartes révélées */
+.carteCode.revelee { color: #ffffff; }
+.carteCode.revelee.couleur-rouge   { background: #ef4444; }
+.carteCode.revelee.couleur-bleu    { background: #3b82f6; }
+.carteCode.revelee.couleur-grise   { background: #6b7280; }
+.carteCode.revelee.couleur-blanche { background: #e5e7eb; color: #374151; }
+.carteCode.revelee.couleur-noire   { background: #111827; border-color: #ffffff; }
+
+/* Historique */
+.journalCode {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.journalCode li {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.95rem;
+}
+
+.journalCode li.equipe-rouge { background: rgba(239, 68, 68, 0.35); }
+.journalCode li.equipe-bleu  { background: rgba(59, 130, 246, 0.35); }
+
+.boutonIndice:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
