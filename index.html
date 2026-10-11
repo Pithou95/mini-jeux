@@ -8,9 +8,9 @@
 </head>
 <body>
   <div class="conteneur">
-    <h1>Memory</h1>
+    <h1>Mini-jeux</h1>
 
-    <!-- Écran d'accueil : pseudo, créer ou rejoindre -->
+    <!-- Écran 1 : accueil (pseudo, créer ou rejoindre) -->
     <div id="accueil">
       <input id="champPseudo" maxlength="15" placeholder="Ton pseudo">
       <div class="ligne">
@@ -22,19 +22,44 @@
       </div>
     </div>
 
-    <!-- Messages : code du salon, attente, erreurs -->
+    <!-- Messages : connexion, erreurs, informations -->
     <p id="infoSalon"></p>
 
-    <!-- Écran de jeu (caché au départ) -->
+    <!-- Écran 2 : salle d'attente -->
+    <div id="salle" class="cache">
+      <h2>Salle d'attente</h2>
+      <p id="codeSalon"></p>
+      <ul id="listeJoueurs"></ul>
+
+      <!-- Commandes visibles seulement par l'hôte -->
+      <div id="commandesHote" class="cache">
+        <div class="ligne">
+          <label for="choixJeu">Jeu :</label>
+          <select id="choixJeu"></select>
+        </div>
+        <p id="infoMinimum"></p>
+        <div class="ligne">
+          <button id="boutonLancer">Lancer la partie</button>
+        </div>
+      </div>
+
+      <!-- Message visible seulement par les invités -->
+      <p id="attenteHote" class="cache"></p>
+    </div>
+
+    <!-- Écran 3 : la partie -->
     <div id="jeu" class="cache">
       <p id="statut"></p>
       <div id="scores"></div>
       <div id="plateau"></div>
-      <button id="rejouer">Rejouer</button>
+      <div class="ligne">
+        <button id="rejouer" class="cache">Rejouer</button>
+        <button id="boutonSalle" class="cache">Retour à la salle</button>
+      </div>
     </div>
   </div>
 
-  <!-- La bibliothèque PeerJS doit être chargée avant main.js -->
+  <!-- PeerJS doit être chargé avant main.js -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <script type="module" src="main.js"></script>
 </body>
