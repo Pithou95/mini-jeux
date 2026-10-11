@@ -1,0 +1,136 @@
+/* ----- Fond et texte général ----- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  text-align: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e1b4b, #4c1d95, #be185d);
+  background-attachment: fixed;
+}
+
+/* ----- Le bloc central ----- */
+.conteneur {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 0 0 16px;
+  letter-spacing: 2px;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ----- Message « Tour de ... » ----- */
+#statut {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 8px 0 16px;
+}
+
+/* ----- Scores ----- */
+#scores {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+
+.badge {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid transparent;
+  font-weight: bold;
+}
+
+/* Le joueur dont c'est le tour est mis en avant */
+.badge.actif {
+  background: #fbbf24;
+  color: #1e1b4b;
+  border-color: #ffffff;
+}
+
+/* ----- Plateau ----- */
+#plateau {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* ----- Cartes ----- */
+.carte {
+  aspect-ratio: 1 / 1;           /* carte toujours carrée */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.carte:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.45);
+}
+
+.carte img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;             /* l'image remplit toute la carte */
+  pointer-events: none;
+}
+
+.cachee {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.retournee {
+  background: #fef3c7;
+  border: 3px solid #fbbf24;
+}
+
+.trouvee {
+  background: #bbf7d0;
+  border: 3px solid #22c55e;
+  cursor: default;
+  opacity: 0.85;
+}
+
+.trouvee:hover,
+.retournee:hover {
+  transform: none;               /* pas d'effet de survol sur les cartes déjà jouées */
+}
+
+/* ----- Bouton ----- */
+#rejouer {
+  margin-top: 24px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s, background 0.2s;
+}
+
+#rejouer:hover {
+  background: #fcd34d;
+  transform: scale(1.06);
+}
