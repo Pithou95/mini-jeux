@@ -9,11 +9,33 @@
 <body>
   <div class="conteneur">
     <h1>Memory</h1>
-    <p id="statut"></p>
-    <div id="scores"></div>
-    <div id="plateau"></div>
-    <button id="rejouer">Rejouer</button>
+
+    <!-- Écran d'accueil : pseudo, créer ou rejoindre -->
+    <div id="accueil">
+      <input id="champPseudo" maxlength="15" placeholder="Ton pseudo">
+      <div class="ligne">
+        <button id="boutonCreer">Créer un salon</button>
+      </div>
+      <div class="ligne">
+        <input id="champCode" maxlength="4" placeholder="Code du salon">
+        <button id="boutonRejoindre">Rejoindre</button>
+      </div>
+    </div>
+
+    <!-- Messages : code du salon, attente, erreurs -->
+    <p id="infoSalon"></p>
+
+    <!-- Écran de jeu (caché au départ) -->
+    <div id="jeu" class="cache">
+      <p id="statut"></p>
+      <div id="scores"></div>
+      <div id="plateau"></div>
+      <button id="rejouer">Rejouer</button>
+    </div>
   </div>
+
+  <!-- La bibliothèque PeerJS doit être chargée avant main.js -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>

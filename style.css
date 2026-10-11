@@ -134,3 +134,48 @@ h1 {
   background: #fcd34d;
   transform: scale(1.06);
 }
+
+/* ----- Accueil ----- */
+.cache {
+  display: none;
+}
+
+#accueil input {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  text-align: center;
+  width: 180px;
+}
+
+#accueil button {
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+#accueil button:hover {
+  background: #fcd34d;
+}
+
+.ligne {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+#champPseudo {
+  margin-bottom: 8px;
+}
+
+#infoSalon {
+  font-size: 1.1rem;
+  min-height: 1.5em;
+}
