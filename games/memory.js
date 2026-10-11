@@ -29,7 +29,7 @@ export const memory = {
     return {
       cartes: symboles.map((symbole, id) => ({ id, symbole, statut: 'cachee' })),
       joueurs: joueurs.map(j => ({ id: j.id, nom: j.nom, score: 0 })),
-      courant: 0,
+      courant: Math.floor(Math.random() * joueurs.length),
       retournees: [],
     };
   },
