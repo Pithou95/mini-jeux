@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test PeerJS</title>
+</head>
+<body>
+  <h1>Test PeerJS</h1>
+
+  <h2>1. Créer un salon</h2>
+  <button id="boutonCreer">Créer un salon</button>
+  <p id="infoCode"></p>
+
+  <h2>2. Rejoindre un salon</h2>
+  <input id="champCode" placeholder="Code du salon">
+  <button id="boutonRejoindre">Rejoindre</button>
+
+  <h2>3. Messages</h2>
+  <input id="champMessage" placeholder="Ton message">
+  <button id="boutonEnvoyer">Envoyer</button>
+  <ul id="journal"></ul>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script>
+    // Préfixe pour que ton identifiant soit unique sur le serveur public
+    const PREFIXE = 'pithou95-memory-';
+
+    // Les éléments de la page
+    const boutonCreer = document.getElementById('boutonCreer');
+    const boutonRejoindre = document.getElementById('boutonRejoindre');
+    const boutonEnvoyer = document.getElementById('boutonEnvoyer');
+    const infoCode = document.getElementById('infoCode');
+    const champCode = document.getElementById('champCode');
+    const champMessage = document.getElementById('champMessage');
+    const journal = document.getElementById('journal');
+
+    let participant = null; // notre Peer
+    let connexion = null;   // la connexion avec l'autre joueur
+
+    // Ajoute une ligne dans la liste des événements
+    function ajouterAuJournal(texte) {
+      const ligne = document.createElement('li');
+      ligne.textContent = texte;
+      journal.appendChild(ligne);
+    }
+
+    // Prépare une connexion : que faire quand elle s'ouvre, reçoit un message ou se ferme
+    function configurerConnexion(nouvelleConnexion) {
+      connexion = nouvelleConnexion;
+      connexion.on('open', () => ajouterAuJournal('Connecté !'));
+      connexion.on('data', (donnee) => ajouterAuJournal('Reçu : ' + donnee));
+      connexion.on('close', () => ajouterAuJournal('Connexion fermée'));
+    }
+
+    // Créer un salon (on devient l'hôte)
+    boutonCreer.addEventListener('click', () => {
+      const code = Math.random().toString(36).substring(2, 6).toUpperCase();
+      participant = new Peer(PREFIXE + code);
+
+      participant.on('open', () => {
+        infoCode.textContent = 'Code du salon : ' + code;
+      });
+      participant.on('connection', (nouvelleConnexion) => {
+        ajouterAuJournal('Un joueur arrive');
+        configurerConnexion(nouvelleConnexion);
+      });
+      participant.on('error', (erreur) => {
+        ajouterAuJournal('Erreur : ' + erreur.type);
+      });
+    });
+
+    // Rejoindre un salon (on devient invité)
+    boutonRejoindre.addEventListener('click', () => {
+      const code = champCode.value.trim().toUpperCase();
+      participant = new Peer(); // identifiant attribué automatiquement
+
+      participant.on('open', () => {
+        configurerConnexion(participant.connect(PREFIXE + code));
+      });
+      participant.on('error', (erreur) => {
+        ajouterAuJournal('Erreur : ' + erreur.type);
+      });
+    });
+
+    // Envoyer un message à l'autre joueur
+    boutonEnvoyer.addEventListener('click', () => {
+      if (!connexion || !connexion.open) {
+        ajouterAuJournal('Pas encore connecté');
+        return;
+      }
+      connexion.send(champMessage.value);
+      ajouterAuJournal('Moi : ' + champMessage.value);
+      champMessage.value = '';
+    });
+  </script>
+</body>
+</html>
