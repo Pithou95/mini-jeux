@@ -23,6 +23,17 @@ export const memory = {
   joueursMin: 2,
   joueursMax: 4,
 
+  // Actions qu'un invité a le droit d'envoyer à l'hôte
+  actionsAutorisees: ['retourner'],
+
+  // Après une action : faut-il en déclencher une autre un peu plus tard ?
+  actionDifferee(etat) {
+    if (etat.retournees.length === 2) {
+      return { delai: 1000, action: { type: 'resoudre' } };
+    }
+    return null;
+  },
+
   // Crée l'état de départ de la partie
   initialiser(joueurs) {
     const symboles = melanger([...SYMBOLES, ...SYMBOLES]);

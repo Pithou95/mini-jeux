@@ -1,4 +1,5 @@
 import { JEUX } from './jeux.js';
+import { AFFICHAGES } from './affichages.js';
 import { creerSalon, rejoindreSalon, envoyerATous, envoyerAUn, envoyerAHote } from './reseau.js';
 
 // =====================================================
@@ -21,9 +22,7 @@ const infoMinimum = document.getElementById('infoMinimum');
 const boutonLancer = document.getElementById('boutonLancer');
 const boutonRejouer = document.getElementById('rejouer');
 const boutonSalle = document.getElementById('boutonSalle');
-const plateau = document.getElementById('plateau');
-const messageTour = document.getElementById('statut');
-const zoneScores = document.getElementById('scores');
+const zoneJeu = document.getElementById('zoneJeu');
 
 // =====================================================
 //  VARIABLES DU PROGRAMME
@@ -34,10 +33,10 @@ let joueursSalle = [];      // les joueurs présents : [{ id, nom }, ...]
 let cleJeu = 'memory';      // le jeu choisi (une clé de JEUX)
 let etat = null;            // l'état de la partie en cours
 let enPartie = false;       // true pendant une partie
-let minuteur = null;        // délai avant de cacher deux cartes différentes
+let minuteur = null;        // délai éventuel avant une action différée
 let refuse = false;         // (invité) true si l'hôte nous a refusés
 
-// Remplit le menu des jeux (rien d'autre à faire quand on ajoutera des jeux)
+// Remplit le menu des jeux
 for (const cle in JEUX) {
   const option = document.createElement('option');
   option.value = cle;
@@ -100,15 +99,14 @@ document.getElementById('boutonRejoindre').addEventListener('click', () => {
   infoSalon.textContent = 'Connexion...';
 
   rejoindreSalon(code, {
-    // Connecté à l'hôte : on se présente
     quandConnecte: () => {
       infoSalon.textContent = 'Connecté ! En attente de la salle...';
       envoyerAHote({ type: 'bonjour', nom: monNom });
     },
-    // Messages de l'hôte
     quandMessage: (message) => traiterMessageDeLHote(message),
     quandDeconnexion: () => {
       if (refuse) return; // le message de refus est déjà affiché
+      arreterAffichages();
       afficherEcran('aucun');
       infoSalon.textContent = "L'hôte s'est déconnecté. Recharge la page pour recommencer.";
     },
@@ -169,9 +167,14 @@ function traiterMessage(idJoueur, message) {
     }
   }
 
-  // Un invité clique sur une carte. On n'accepte QUE l'action « retourner »
-  if (message.type === 'action' && enPartie && message.action && message.action.type === 'retourner') {
-    appliquerAction(idJoueur, message.action);
+  // Un invité envoie une action de jeu. On n'accepte QUE les actions
+  // que le jeu autorise aux invités (sinon il pourrait tricher)
+  if (message.type === 'action' && enPartie && message.action
+      && typeof message.action.type === 'string') {
+    const jeu = JEUX[cleJeu];
+    if (jeu.actionsAutorisees.includes(message.action.type)) {
+      appliquerAction(idJoueur, message.action);
+    }
   }
 }
 
@@ -216,10 +219,20 @@ function diffuserEtat() {
   afficher();
 }
 
+// Arrête les éventuels chronos des affichages (retour à la salle, déconnexion)
+function arreterAffichages() {
+  for (const cle in AFFICHAGES) {
+    if (AFFICHAGES[cle].arreter) {
+      AFFICHAGES[cle].arreter();
+    }
+  }
+}
+
 // =====================================================
 //  SALLE D'ATTENTE (affichage)
 // =====================================================
 function afficherSalle() {
+  arreterAffichages();
   const jeuChoisi = JEUX[cleJeu];
 
   listeJoueurs.innerHTML = '';
@@ -282,7 +295,7 @@ boutonSalle.addEventListener('click', () => {
 });
 
 // =====================================================
-//  JOUER (hôte : applique les règles)
+//  JOUER (hôte : applique les règles du jeu)
 // =====================================================
 function appliquerAction(idJoueur, action) {
   const jeu = JEUX[cleJeu];
@@ -296,19 +309,21 @@ function appliquerAction(idJoueur, action) {
 
   diffuserEtat();
 
-  // Deux cartes différentes : on les cache après 1 seconde
-  if (etat.retournees.length === 2) {
-    minuteur = setTimeout(() => {
-      if (!enPartie) return; // la partie a été arrêtée entre-temps
-      etat = jeu.traiterAction(etat, null, { type: 'resoudre' });
-      diffuserEtat();
-    }, 1000);
+  // Certains jeux demandent une action un peu plus tard (ex. cacher des cartes)
+  if (jeu.actionDifferee) {
+    const suite = jeu.actionDifferee(etat);
+    if (suite) {
+      minuteur = setTimeout(() => {
+        if (!enPartie) return; // la partie a été arrêtée entre-temps
+        etat = jeu.traiterAction(etat, null, suite.action);
+        diffuserEtat();
+      }, suite.delai);
+    }
   }
 }
 
-// Clic sur une carte
-function cliquerCarte(indice) {
-  const action = { type: 'retourner', indice };
+// Appelée par le dessin du jeu quand le joueur fait une action (clic...)
+function envoyerAction(action) {
   if (role === 'hote') {
     appliquerAction('hote', action);          // l'hôte applique directement
   } else {
@@ -317,60 +332,19 @@ function cliquerCarte(indice) {
 }
 
 // =====================================================
-//  AFFICHAGE DE LA PARTIE (identique pour tout le monde)
-//  Pour l'instant il ne sait afficher que le Memory.
+//  AFFICHAGE DE LA PARTIE : on délègue au fichier du jeu
 // =====================================================
 function afficher() {
-  const jeu = JEUX[cleJeu];
   afficherEcran('jeu');
 
   // Les boutons de fin de partie sont réservés à l'hôte
   boutonRejouer.classList.toggle('cache', role !== 'hote');
   boutonSalle.classList.toggle('cache', role !== 'hote');
 
-  // Les cartes
-  plateau.innerHTML = '';
-  etat.cartes.forEach((carte, indice) => {
-    const divCarte = document.createElement('div');
-    divCarte.className = 'carte ' + carte.statut;
-
-    if (carte.statut === 'cachee') {
-      divCarte.textContent = '?';
-    } else {
-      const image = document.createElement('img');
-      image.src = carte.symbole;
-      image.alt = '';
-      divCarte.appendChild(image);
-    }
-
-    divCarte.addEventListener('click', () => cliquerCarte(indice));
-    plateau.appendChild(divCarte);
+  AFFICHAGES[cleJeu].afficher({
+    conteneur: zoneJeu,
+    etat: etat,
+    monId: monIdJoueur,
+    envoyerAction: envoyerAction,
   });
-
-  // Les scores : le joueur dont c'est le tour est en surbrillance
-  zoneScores.innerHTML = '';
-  etat.joueurs.forEach((joueur, position) => {
-    const badge = document.createElement('span');
-    badge.className = 'badge' + (position === etat.courant ? ' actif' : '');
-    badge.textContent = `${joueur.nom} : ${joueur.score}`;
-    zoneScores.appendChild(badge);
-  });
-
-  // Le message : résultat final, ou à qui le tour
-  const resultat = jeu.estTerminee(etat);
-  if (resultat.terminee) {
-    const noms = resultat.gagnants.map(j => j.nom).join(' et ');
-    if (resultat.gagnants.length > 1) {
-      messageTour.textContent = `Égalité : ${noms} !`;
-    } else {
-      messageTour.textContent = `Victoire de ${noms} !`;
-    }
-  } else {
-    const joueurCourant = etat.joueurs[etat.courant];
-    if (joueurCourant.id === monIdJoueur) {
-      messageTour.textContent = 'À toi de jouer !';
-    } else {
-      messageTour.textContent = `Tour de ${joueurCourant.nom}`;
-    }
-  }
 }

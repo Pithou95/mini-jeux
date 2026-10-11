@@ -243,3 +243,72 @@ h1 {
   min-height: 1.2em;
   opacity: 0.9;
 }
+
+/* ----- Jeu Chronomètre ----- */
+#objectif {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+#affichageTemps {
+  font-size: 4rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  margin: 16px auto;
+  padding: 20px;
+  max-width: 320px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+#boutonStop {
+  padding: 18px 60px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: #ef4444;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+#boutonStop:hover:not(:disabled) {
+  background: #f87171;
+  transform: scale(1.05);
+}
+
+#boutonStop:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#messageChrono {
+  min-height: 1.5em;
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+#listeChrono {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+#listeChrono li {
+  min-width: 260px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#listeChrono li.gagnant {
+  background: #fbbf24;
+  color: #1e1b4b;
+  font-weight: bold;
+}
