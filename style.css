@@ -496,3 +496,192 @@ button.place:disabled,
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+/* ----- Jeu Rummikub ----- */
+
+/* Le Rummikub a besoin de plus de place que les autres jeux */
+.conteneur:has(#tableRummikub) {
+  max-width: 900px;
+}
+
+#tableRummikub {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  margin: 12px 0;
+  min-height: 90px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ensemble {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px;
+  min-height: 68px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ensemble.valide   { border-color: #22c55e; }
+.ensemble.invalide { border-color: #ef4444; }
+
+#nouvelEnsemble {
+  padding: 14px;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* Le « chevalet » du joueur */
+#mainJoueur {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px;
+  min-height: 76px;
+  border-radius: 12px;
+  background: #8b5a2b;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Les tuiles */
+.tuile {
+  width: 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f5efe0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tuile.couleur-noir  { color: #111827; }
+.tuile.couleur-rouge { color: #dc2626; }
+.tuile.couleur-bleu  { color: #2563eb; }
+.tuile.couleur-jaune { color: #ca8a04; }
+.tuile.joker         { color: #be185d; font-size: 1.8rem; }
+
+.tuile.deplacable {
+  cursor: grab;
+  touch-action: none;   /* indispensable pour glisser au doigt sans faire défiler la page */
+}
+
+.tuile.posee    { outline: 3px solid #fbbf24; }
+.tuile.enGlisse { opacity: 0.3; }
+
+/* La copie qui suit le doigt ou la souris */
+.tuileFantome {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  transform: scale(1.15);
+  opacity: 0.92;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+/* Boutons */
+.boutonRummikub {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.boutonRummikub.petit {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+}
+
+.boutonRummikub:hover:not(:disabled) { background: #fcd34d; }
+
+.boutonRummikub:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .tuile {
+    width: 34px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
+
+/* ----- Rummikub : paquets de 5 lignes, 3 paquets par ligne ----- */
+
+/* Page plus large pour loger 3 paquets côte à côte */
+.conteneur:has(#tableRummikub) {
+  max-width: 1100px;
+}
+
+#grillePaquets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.paquet {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+/* Tuiles un peu plus petites sur la table, pour que les paquets tiennent */
+.ensemble {
+  min-height: 52px;
+  gap: 3px;
+  padding: 4px;
+}
+
+.ensemble .tuile {
+  width: 30px;
+  height: 42px;
+  font-size: 1.1rem;
+  border-radius: 5px;
+}
+
+/* Sur téléphone, 3 colonnes seraient trop étroites : un paquet par ligne */
+@media (max-width: 700px) {
+  #grillePaquets {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----- Rummikub : sélection multiple ----- */
+.tuile.selectionnee {
+  outline: 3px solid #38bdf8;
+  transform: translateY(-6px);
+}
+
+/* La pastille « ×5 » qui accompagne les tuiles déplacées */
+.tuileFantome .badgeNombre {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
