@@ -35,6 +35,7 @@ let etat = null;            // l'état de la partie en cours
 let enPartie = false;       // true pendant une partie
 let minuteur = null;        // délai éventuel avant une action différée
 let refuse = false;         // (invité) true si l'hôte nous a refusés
+let boucle = null;          // (hôte) la répétition qui fait avancer les jeux en temps réel
 
 // Le nombre de joueurs actuel convient-il à ce jeu ?
 function nombreValide(jeu, nombre) {
@@ -253,6 +254,7 @@ function arreterAffichages() {
 //  SALLE D'ATTENTE (affichage)
 // =====================================================
 function afficherSalle() {
+  arreterBoucle();
   arreterAffichages();
   const jeuChoisi = JEUX[cleJeu];
 
@@ -293,17 +295,48 @@ choixJeu.addEventListener('change', () => {
 });
 
 // =====================================================
+//  JEUX EN TEMPS RÉEL (hôte) : la simulation tourne ~30 fois par seconde
+// =====================================================
+function demarrerBoucle(jeu) {
+  arreterBoucle();
+  let dernier = performance.now();
+  boucle = setInterval(() => {
+    if (!enPartie) {
+      arreterBoucle();
+      return;
+    }
+    const maintenant = performance.now();
+    const dt = Math.min((maintenant - dernier) / 1000, 0.1); // plafonné si l'onglet est ralenti
+    dernier = maintenant;
+
+    etat = jeu.pas(etat, dt);
+    diffuserEtat();
+
+    if (jeu.estTerminee(etat).terminee) {
+      arreterBoucle();
+    }
+  }, 33);
+}
+
+function arreterBoucle() {
+  clearInterval(boucle);
+  boucle = null;
+}
+
+// =====================================================
 //  LANCER, REJOUER, RETOURNER À LA SALLE (hôte)
 // =====================================================
 function lancerPartie() {
   const jeu = JEUX[cleJeu];
   if (!nombreValide(jeu, joueursSalle.length)) return;
 
+  arreterBoucle();
   clearTimeout(minuteur);
   enPartie = true;
   etat = jeu.initialiser(joueursSalle);
   infoSalon.textContent = '';
   diffuserEtat();
+  if (jeu.pas) demarrerBoucle(jeu);   // seulement pour les jeux en temps réel
 }
 
 boutonLancer.addEventListener('click', lancerPartie);

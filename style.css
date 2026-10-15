@@ -721,3 +721,45 @@ button.place:disabled,
 .ensemble.cible:hover {
   background: rgba(56, 189, 248, 0.2);
 }
+
+/* ----- Jeu Sumo ----- */
+#canvasSumo {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  margin: 12px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+#boutonAvancer {
+  padding: 22px 70px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: #16a34a;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+  /* Indispensable pour maintenir le doigt sans faire défiler la page ni sélectionner du texte */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#boutonAvancer.enfonce {
+  background: #15803d;
+  transform: scale(0.95);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+#boutonAvancer.inactif {
+  opacity: 0.4;
+}
+
+.badgeCode.elimine {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
