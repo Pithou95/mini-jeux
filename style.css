@@ -685,3 +685,39 @@ button.place:disabled,
   font-size: 0.8rem;
   font-weight: bold;
 }
+
+/* Rectangle « nouvel ensemble » cliquable quand des tuiles sont sélectionnées */
+#nouvelEnsemble.prete {
+  cursor: pointer;
+  opacity: 1;
+  border-color: #38bdf8;
+  border-style: solid;
+  background: rgba(56, 189, 248, 0.2);
+  font-weight: bold;
+}
+
+#nouvelEnsemble.prete:hover {
+  background: rgba(56, 189, 248, 0.35);
+}
+
+/* Ensemble cliquable quand des tuiles sont sélectionnées */
+.ensemble.cible {
+  cursor: pointer;
+  position: relative;
+}
+
+/* Un espace libre au bout de l'ensemble pour pouvoir cliquer sur le fond */
+.ensemble.cible::after {
+  content: '＋';
+  align-self: center;
+  margin-left: 6px;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #38bdf8;
+  pointer-events: none;
+}
+
+.ensemble.cible:hover {
+  background: rgba(56, 189, 248, 0.2);
+}

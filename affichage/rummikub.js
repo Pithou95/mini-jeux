@@ -262,6 +262,40 @@ function deposer(ids, cible, x) {
   }
 }
 
+// ===================== POSE PAR CLIC =====================
+
+// Pose toutes les tuiles sélectionnées dans un NOUVEL ensemble
+function poserSelection() {
+  if (!brouillon || selection.size === 0) return;
+
+  const ids = selectionOrdonnee();   // dans l'ordre d'affichage
+  const nouveau = [];
+  brouillon.table.push(nouveau);
+  ids.forEach(retirer);              // on les enlève de leur place actuelle
+  ids.forEach(id => nouveau.push(id));
+
+  selection.clear();
+  nettoyer();
+  dessiner();
+}
+
+// Ajoute toutes les tuiles sélectionnées à la FIN d'un ensemble existant
+function ajouterSelectionA(indexEnsemble) {
+  if (!brouillon || selection.size === 0) return;
+  const ensemble = brouillon.table[indexEnsemble];
+  if (!ensemble) return;
+
+  const ids = selectionOrdonnee().filter(id => !ensemble.includes(id));
+  if (ids.length === 0) return;
+
+  ids.forEach(retirer);
+  ids.forEach(id => ensemble.push(id));
+
+  selection.clear();
+  nettoyer();
+  dessiner();
+}
+
 // ===================== TRI DU JEU =====================
 
 function trierMain(critere) {
@@ -375,6 +409,14 @@ function dessiner() {
       if (monTour) {
         const valide = evaluerEnsemble(ensemble.map(id => tuilesParId.get(id)));
         div.classList.add(valide ? 'valide' : 'invalide');
+
+        // Des tuiles sont sélectionnées : cliquer sur le fond de l'ensemble les y ajoute
+        if (selection.size > 0) {
+          div.classList.add('cible');
+          div.addEventListener('click', (e) => {
+            if (e.target === div) ajouterSelectionA(index);
+          });
+        }
       }
       ensemble.forEach(id => div.appendChild(creerTuile(id, monTour, true)));
       paquet.appendChild(div);
@@ -383,8 +425,15 @@ function dessiner() {
   }
 
   if (monTour) {
-    const zone = creer('div', null, '＋ Dépose une ou plusieurs tuiles ici pour créer un nouvel ensemble');
+    const zone = creer('div');
     zone.id = 'nouvelEnsemble';
+    if (selection.size > 0) {
+      zone.classList.add('prete');
+      zone.textContent = `＋ Clique ici pour poser les ${selection.size} tuile(s) sélectionnée(s)`;
+    } else {
+      zone.textContent = '＋ Sélectionne des tuiles puis clique ici (ou glisse-les ici) pour créer un nouvel ensemble';
+    }
+    zone.addEventListener('click', poserSelection);
     table.appendChild(zone);
   } else if (brouillon.table.length === 0) {
     table.appendChild(creer('p', null, 'La table est vide.'));
