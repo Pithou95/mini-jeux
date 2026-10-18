@@ -763,3 +763,135 @@ button.place:disabled,
   opacity: 0.45;
   text-decoration: line-through;
 }
+
+/* ----- Jeu Pays (quiz) ----- */
+.barrePays {
+  height: 14px;
+  max-width: 520px;
+  margin: 8px auto;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+#barreTempsPays {
+  height: 100%;
+  width: 100%;
+  background: #22c55e;
+  transition: width 0.1s linear, background 0.3s;
+}
+
+#barreTempsPays.urgent {
+  background: #ef4444;
+}
+
+.blocQuestionPays {
+  margin: 12px 0;
+}
+
+.enoncePays {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.sujetPays {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+#drapeauPays {
+  display: block;
+  height: 180px;
+  width: auto;
+  max-width: 100%;
+  margin: 10px auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.optionsPays {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 560px;
+  margin: 14px auto;
+}
+
+.optionPays {
+  padding: 16px 10px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: 3px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.optionPays:hover:not(:disabled) {
+  background: #fcd34d;
+}
+
+.optionPays:disabled {
+  cursor: default;
+}
+
+.optionPays.choisie {
+  background: #93c5fd;
+  border-color: #ffffff;
+}
+
+.optionPays.bonne {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.optionPays.mauvaise {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+#boutonPasser {
+  padding: 8px 22px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+#boutonPasser:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.resultatsPays {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.resultatsPays li {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.95rem;
+}
+
+.resultatsPays li.bien { background: rgba(34, 197, 94, 0.35); }
+.resultatsPays li.mal  { background: rgba(239, 68, 68, 0.35); }
+
+.finPays {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+}

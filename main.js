@@ -309,9 +309,12 @@ function demarrerBoucle(jeu) {
     const dt = Math.min((maintenant - dernier) / 1000, 0.1); // plafonné si l'onglet est ralenti
     dernier = maintenant;
 
+    const versionAvant = etat.version;
     etat = jeu.pas(etat, dt);
-    diffuserEtat();
-
+    // Les jeux « sur changement » n'envoient l'état que si quelque chose a changé
+    if (!jeu.diffusionSurChangement || etat.version !== versionAvant) {
+      diffuserEtat();
+    }
     if (jeu.estTerminee(etat).terminee) {
       arreterBoucle();
     }
