@@ -4,6 +4,8 @@ import { codename } from './games/codename.js';
 import { rummikub } from './games/rummikub.js';
 import { sumo } from './games/sumo.js';
 import { pays } from './games/pays.js';
+import { batailleNavale } from './games/bataille-navale.js';
+import { minigolf } from './games/minigolf.js';
 
 // La clé (à gauche) identifie le jeu dans les messages réseau
 export const JEUX = {
@@ -13,4 +15,6 @@ export const JEUX = {
   rummikub: rummikub,
   sumo: sumo,
   pays: pays,
+  bataille: batailleNavale,
+    minigolf: minigolf,
 };

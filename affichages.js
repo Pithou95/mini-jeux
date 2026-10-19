@@ -4,6 +4,8 @@ import * as affichageCodename from './affichage/codename.js';
 import * as affichageRummikub from './affichage/rummikub.js';
 import * as affichageSumo from './affichage/sumo.js';
 import * as affichagePays from './affichage/pays.js';
+import * as affichageBataille from './affichage/bataille-navale.js';
+import * as affichageMinigolf from './affichage/minigolf.js';
 
 // Mêmes clés que dans JEUX
 export const AFFICHAGES = {
@@ -13,4 +15,6 @@ export const AFFICHAGES = {
   rummikub: affichageRummikub,
   sumo: affichageSumo,
   pays: affichagePays,
+  bataille: affichageBataille,
+  minigolf: affichageMinigolf,
 };

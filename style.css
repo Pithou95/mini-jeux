@@ -895,3 +895,146 @@ button.place:disabled,
   border-radius: 16px;
   background: rgba(0, 0, 0, 0.25);
 }
+
+/* ===================== BATAILLE NAVALE ===================== */
+
+.bn-titre {
+  margin: 16px 0 8px;
+  font-size: 1.1rem;
+}
+
+.bn-aide,
+.bn-dernier,
+.bn-message {
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.bn-dernier { font-weight: bold; min-height: 1.2em; }
+.bn-message { color: #fecaca; min-height: 1.2em; }
+
+/* La grille : 1 colonne d'en-tête + 10 colonnes de cases */
+.bn-grille {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 2px;
+  padding: 8px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.bn-grille.petite { max-width: 300px; }
+
+.bn-entete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  font-size: 0.7rem;
+  font-weight: bold;
+  opacity: 0.75;
+}
+
+.bn-case {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: #1d4ed8;           /* la mer */
+  font-size: 0.9rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.bn-case.bn-bateau { background: #9ca3af; }
+.bn-case.bn-eau    { background: #1e3a8a; color: #bfdbfe; }
+.bn-case.bn-touche { background: #ef4444; color: #ffffff; }
+.bn-case.bn-coule  { background: #7f1d1d; color: #ffffff; }
+
+.bn-case.bn-clic { cursor: pointer; }
+.bn-case.bn-clic:hover { background: #60a5fa; }
+.bn-case.bn-bateau.bn-clic:hover { background: #d1d5db; }
+
+/* Boutons du placement */
+.bn-outils {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.bn-bouton {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #1e1b4b;
+  background: #fbbf24;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.bn-bouton:hover:not(:disabled) { background: #fcd34d; }
+.bn-bouton.bn-pose { background: #86efac; }
+.bn-bouton.bn-selectionne { border-color: #ffffff; box-shadow: 0 0 0 2px #fbbf24; }
+.bn-bouton:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.bn-valider {
+  margin-top: 12px;
+  padding: 12px 32px;
+  font-size: 1.05rem;
+}
+
+/* ----- Jeu Mini-golf ----- */
+#canvasMinigolf {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 72vh;          /* le terrain tient dans l'écran sans trop faire défiler */
+  margin: 10px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#tableauMinigolf table {
+  margin: 10px auto;
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-size: 0.95rem;
+}
+
+#tableauMinigolf th {
+  padding: 4px 8px;
+  opacity: 0.8;
+}
+
+#tableauMinigolf td {
+  min-width: 28px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#tableauMinigolf td.nomJoueur {
+  text-align: left;
+  font-weight: bold;
+  padding-right: 14px;
+}
+
+#tableauMinigolf td.encours {
+  background: rgba(251, 191, 36, 0.35);
+  font-style: italic;
+}
+
+#tableauMinigolf td.total {
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.22);
+}
